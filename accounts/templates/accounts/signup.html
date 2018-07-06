@@ -1,0 +1,16 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+	<div class="login-box" style="width: 700px">
+		<div class="box-header">
+			<h2>Sign Up</h2>
+		</div>
+	<form class="site-form" action = "/accounts/signup/" method = "post">
+		{% csrf_token %}
+		{{form.as_p}}
+		<input id="signupinput" type="submit" value="Signup">
+	</form>
+	<br><br>
+	<a href="/"><button>Go to Homepage</button></a>
+</div>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+        <title>CrimePredict</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.load('current', {'packages':['corechart']});
+
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Assault', 'Robbery', 'Murder', { role: 'annotation' }],
+          ['Monday', {{crime_result.Monday.0.1}}, {{crime_result.Monday.1.1}}, {{crime_result.Monday.2.1}}, ''],
+          ['Tuesday', {{crime_result.Tuesday.0.1}}, {{crime_result.Tuesday.1.1}}, {{crime_result.Tuesday.2.1}}, ''],
+          ['Wednesday', {{crime_result.Wednesday.0.1}}, {{crime_result.Wednesday.1.1}}, {{crime_result.Wednesday.2.1}}, ''],
+          ['Thursday', {{crime_result.Thursday.0.1}}, {{crime_result.Thursday.1.1}}, {{crime_result.Thursday.2.1}}, ''],
+          ['Friday', {{crime_result.Friday.0.1}}, {{crime_result.Friday.1.1}}, {{crime_result.Friday.2.1}}, ''],
+          ['Saturday', {{crime_result.Saturday.0.1}}, {{crime_result.Saturday.1.1}}, {{crime_result.Saturday.2.1}}, ''],
+          ['Sunday', {{crime_result.Sunday.0.1}}, {{crime_result.Sunday.1.1}}, {{crime_result.Sunday.2.1}}, '']
+        ]);
+        var options = {
+          title: 'Crime Probabilities Day Wise',
+          hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+          vAxis: {title: 'Probability', minValue: 0},
+          legend: { position: 'bottom' }
+
+        };
+        var options2 = {
+          title: 'Crime Probabilities Day Wise',
+          curveType: 'function',
+          hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+          vAxis: {title: 'Probability', minValue: 0},
+          legend: { position: 'bottom' }
+        };
+        var options3 = {
+        width: 700,
+        height: 400,
+        bars:'horizontal',
+        hAxis: {title: 'Probability', minValue: 0},
+
+        colors:['red','#999','#346ac9', '#279423'],
+        legend: { position: 'top', maxLines: 7 },
+        bar: { groupWidth: '75%' },
+        isStacked: true
+        };
+        var options4 = {
+          title: 'The trend of crime Probabilities',
+          hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+          vAxis: {title: 'Probability', minValue: 0},
+          legend: { position: 'bottom' },
+
+          isStacked: true
+        };
+        /*var options = {
+        width: 700,
+        height: 400,
+        bars:'horizontal',
+        legend: { position: 'top', maxLines: 7 },
+        bar: { groupWidth: '75%' },
+        isStacked: true
+        };
+        /*var options_fullStacked = {
+          isStacked: 'percent',
+          bars:'horizontal',
+          height: 300,
+          legend: {position: 'top', maxLines: 7},
+          hAxis: {
+            minValue: 0,
+            ticks: [0, .3, .6, .9, 1]
+          }
+        };
+        
+
+        var chart = new google.charts.Bar(document.getElementById('barchart_values'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));*/
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_1'));
+        chart.draw(data, options);
+        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart2.draw(data, options2);
+        var chart3 = new google.charts.Bar(document.getElementById('barchart_values'));
+        chart3.draw(data, google.charts.Bar.convertOptions(options3));
+        var chart4 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+        chart4.draw(data, options4);
+      }
+    </script>    
+</head>
+<body>
+	<div class="login-box">
+    <div class="box-header">
+      <h2>Results of Prediction</h2>
+    </div>
+	<p><strong>Neighborhood:</strong> {{crime_details.0}} <strong>District:</strong> {{crime_details.1}} <strong>Time: </strong>{{crime_details.2}}00 hrs <strong>Day:</strong>{{crime_details.3}}</p>
+	<br>
+  <a href="/"><button>Go to Homepage</button></a>
+  <a href="{% url 'nbayes:predict' %}"><button>Predict Another Crime</button></a>
+	<!--<div class="results">
+    {% for key,value in crime_result.Monday %}<p>{{value}}</p>
+    {% endfor %}-->
+  <br><br>    
+  <div id="chart_div_1" style="width: 900px; height: auto;margin: 0 auto;position: relative;"></div><br><br>
+  <div id="curve_chart" style="width: 900px; height: auto;margin: 0 auto;position: relative;"></div>
+  <br><br>
+  <div id="barchart_values" style="padding-left: 150px;width: 900px; height: auto;margin: 0 auto;position: relative;"></div><br><br>
+  <div id="chart_div" style="width: 900px; height: auto;margin: 0 auto;position: relative;"></div>
+
+	</div>
+	<!--<div id="piechart_3d" style="width: 900px; height: 500px;"></div>-->
+
+
+	
+
+</body>
+<style type="text/css">
+a,button {
+  margin-top: 0px;
+  border: 0;
+  border-radius: 2px;
+  color: white;
+  padding: 10px;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  background-color: rgb(254, 209, 54);
+  cursor:pointer;
+  outline: none;
+}
+
+a:hover,button:hover {
+  opacity: 0.7;
+  transition: 0.5s;
+}
+
+p.small {
+  font-size: 0.8em;
+  margin: 20px 0 0;
+}
+h1{
+  font-family: 'Roboto Slab', serif;
+  font-weight: 300;
+  font-size: 3.2em;
+  color: blue;
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+  margin: 0 auto;
+  padding-top: 18px;
+  max-width: 300px;
+  text-align: center;
+  position: relative;
+  top: 0px;
+  }
+  .barchart_values{
+    padding-top: 50px;
+    text-align: center;
+
+  }
+  .login-box {
+  background-color: white;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 50px rgba(0,0,0,0.4);
+  text-align: center;
+}
+h2 {
+  text-transform: uppercase;
+  color: white;
+  font-weight: 1000;
+  letter-spacing: 1px;
+  font-family: 'Roboto Slab','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 1.4em;
+  line-height: 2.8em;
+}
+
+.login-box .box-header {
+  background-color: rgb(254, 209, 54);
+  margin-top: 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.login-box label {
+  font-weight: 700;
+  font-size: .8em;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 2em;
+}
+</style>

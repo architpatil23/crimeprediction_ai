@@ -1,0 +1,31 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+	<div class="login-box">
+		<div class="box-header">
+			<h2>Predict a Crime</h2>
+		</div>
+		<form action = "/nbayes/predict/" method = "post">
+		{% csrf_token %}
+		<!--<label for="name">Neighbourhood:</label>
+		<input id="name" type="text" name="nbd"><br>
+
+		<label for ="dist">District:</label>
+		<input id="dist" type="text" name="dist"><br>
+
+		<label for="hour">Hour:</label>
+		<input id = "hour" type="number" name="hour" min="0" max="23"><br>
+
+		<label for="day">Day:</label>
+		<input id="day" type="text" name="day"><br>
+		-->
+		{{ form.as_p }}
+		<br>
+		<input type="submit" value="Submit Details">
+		</form>
+		<br><br>
+		<a href="/"><button>Go to Homepage</button></a>
+		<a href="{% url 'accounts:logout' %}"><button>Sign Out</button></a>
+	</div>
+	
+{% endblock %}
